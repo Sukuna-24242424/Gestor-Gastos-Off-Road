@@ -198,6 +198,8 @@ min-height:40px;
 white-space:nowrap;
 display:flex;
 gap:5px;
+flex-wrap: wrap;
+justify-content: center;
 }
 
 .filtros{
@@ -408,8 +410,8 @@ letter-spacing: 0.5px;
 <option value="03">Março</option>
 <option value="04">Abril</option>
 <option value="05">Maio</option>
-<option value="06" selected>Junho</option>
-<option value="07">Julho</option>
+<option value="06">Junho</option>
+<option value="07" selected>Julho</option>
 <option value="08">Agosto</option>
 <option value="09">Setembro</option>
 <option value="10">Outubro</option>
@@ -601,7 +603,7 @@ function formatarDataCompleta(dataStr) {
     return `${dia}/${mes}/${ano} - ${diaSemana}`;
 }
 
-// INICIALIZAR DATA
+// INICIALIZAR DATA SE NÃO EXISTIR
 function inicializarDataSeNaoExistir(dataStr) {
     if(!bancoDeDados[dataStr]) {
         bancoDeDados[dataStr] = {
@@ -629,7 +631,7 @@ function carregarDadosDaData() {
     salvarTudoNoNavegador();
 }
 
-// HOJE
+// IR PARA DATA DE HOJE
 function irParaHoje() {
     const hoje = new Date();
     const ano = hoje.getFullYear();
@@ -640,7 +642,7 @@ function irParaHoje() {
     carregarDadosDaData();
 }
 
-// TABELA DE DESPESAS
+// RENDERIZAR TABELA DE DESPESAS
 function renderizarTabela() {
     const tbody = document.querySelector("#tabela-despesas tbody");
     tbody.innerHTML = "";
@@ -699,7 +701,7 @@ function calcularTotalDespesas() {
     document.getElementById("valor-total").textContent = total.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
 }
 
-// PAGAMENTOS
+// CONTROLE DE PAGAMENTOS
 function editarValorCompra() {
     const atual = bancoDeDados[dataSelecionada].pagamentos.valorTotal;
     const novoValor = parseFloat(prompt("Valor total da compra:", atual.toFixed(2)));
@@ -790,14 +792,14 @@ function calcularResumoPeriodo() {
     document.getElementById("valor-resumo").textContent = totalGeral.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
 }
 
-// OBSERVAÇÃO
+// SALVAR OBSERVAÇÃO
 function salvarObservacao() {
     bancoDeDados[dataSelecionada].observacao = document.getElementById("observacao").value.trim();
     salvarTudoNoNavegador();
     alert("Observação salva com sucesso!");
 }
 
-// SISTEMA: RECEITAS E DESPESAS
+// LANÇAMENTOS DE RECEITAS E DESPESAS
 function abrirCadastroMovimento() {
     const tipo = prompt("Tipo: 'receita' ou 'despesa'?");
     if(!tipo) return;
@@ -847,7 +849,7 @@ function atualizarResumoMes() {
     Object.keys(bancoDeDados).forEach(dataStr => {
         const [ano, mes] = dataStr.split("-");
         if(ano === anoSel && mes === mesSel) {
-            const movs = bancoDeDados[dataStr].movimentos;
+            const movs = bancoDeDados[dataStr].movimentos || [];
             movs.forEach(m => {
                 if(m.tipo === 'receita') totalReceitas += m.valor;
                 if(m.tipo === 'despesa') totalDespesas += m.valor;
@@ -888,16 +890,26 @@ function atualizarResumoMes() {
     });
 }
 
-// SALVAR/CARREGAR
+// FUNÇÕES DE SALVAMENTO E CARREGAMENTO
 function salvarTudoNoNavegador(){
-    localStorage.setItem("gestorGastosOffRoad", JSON.stringify(bancoDeDados));
+    try {
+        localStorage.setItem("gestorGastosOffRoad", JSON.stringify(bancoDeDados));
+    } catch (erro) {
+        console.warn("Não foi possível salvar os dados:", erro);
+    }
 }
 
 function carregarTudoDoNavegador(){
     const dadosSalvos = localStorage.getItem("gestorGastosOffRoad");
     if(dadosSalvos) {
-        bancoDeDados = JSON.parse(dadosSalvos);
+        try {
+            bancoDeDados = JSON.parse(dadosSalvos);
+        } catch (erro) {
+            console.warn("Dados corrompidos, iniciando novo banco:", erro);
+            bancoDeDados = {};
+        }
     } else {
+        // DADOS INICIAIS DE EXEMPLO - NÃO APAGA SE JÁ TIVER DADOS SALVOS
         bancoDeDados["2026-06-19"] = {
             despesas: [
                 {descricao:"Usinagem bucha bronze eixo de tração", valor:30.00},
@@ -939,7 +951,7 @@ function carregarTudoDoNavegador(){
     }
 }
 
-// INICIALIZAÇÃO
+// INICIALIZAÇÃO AO CARREGAR A PÁGINA
 window.onload = function() {
     carregarTudoDoNavegador();
     irParaHoje();
