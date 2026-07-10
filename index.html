@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Gestor de Gastos Off Road</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,Arial,sans-serif;
+}
+
+body{
+background:#1d1d1d;
+color:white;
+line-height:1.5;
+}
+
+header{
+background:#111;
+padding:15px;
+display:flex;
+align-items:center;
+gap:15px;
+flex-wrap: wrap;
+border-bottom:4px solid #ff9800;
+}
+
+header img{
+width:60px;
+height:auto;
+}
+
+header h1{
+font-size:clamp(22px, 5vw, 34px);
+color:#ff9800;
+}
+
+header h3{
+font-weight:normal;
+color:#ddd;
+width:100%;
+font-size:clamp(14px, 3vw, 16px);
+margin-top:5px;
+}
+
+.container{
+width:96%;
+margin:auto;
+margin-top:20px;
+padding-bottom:30px;
+}
+
+.card{
+background:#2d2d2d;
+padding:15px;
+border-radius:12px;
+margin-bottom:20px;
+box-shadow:0px 2px 8px rgba(0,0,0,0.6);
+}
+
+.card h2{
+color:#ff9800;
+margin-bottom:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap: wrap;
+gap:10px;
+font-size:clamp(18px, 4vw, 22px);
+}
+
+.tabela-responsiva{
+width:100%;
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+min-width:500px;
+}
+
+th{
+background:#ff9800;
+color:black;
+padding:10px 8px;
+font-size:clamp(15px, 3vw, 17px);
+text-align:left;
+white-space:nowrap;
+}
+
+td{
+padding:10px 8px;
+border-bottom:1px solid gray;
+font-size:clamp(15px, 3vw, 17px);
+vertical-align: middle;
+}
+
+tr:hover{
+background:#3a3a3a;
+}
+
+.total{
+font-size:clamp(22px, 5vw, 28px);
+font-weight:bold;
+color:#00ff88;
+margin-top:20px;
+}
+
+.descricao-total{
+font-size:clamp(13px, 2.8vw, 15px);
+color:#aaa;
+margin-top:5px;
+font-style:italic;
+}
+
+.pagamentos{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:12px;
+margin-top:15px;
+}
+
+.caixa{
+background:#444;
+padding:12px;
+border-radius:10px;
+text-align:center;
+font-size:clamp(16px, 3.5vw, 18px);
+}
+
+.caixa b{
+display:block;
+margin-top:6px;
+font-size:clamp(17px, 3.8vw, 20px);
+}
+
+footer{
+text-align:center;
+padding:15px;
+margin-top:20px;
+color:#999;
+font-size:clamp(13px, 2.8vw, 15px);
+}
+
+.btn{
+background:#ff9800;
+color:black;
+border:none;
+padding:10px 14px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+font-size:clamp(14px, 3vw, 16px);
+transition: 0.2s;
+min-height:40px;
+}
+
+.btn:hover{
+background:#ffb74d;
+}
+
+.btn-pequeno{
+padding:8px 12px;
+font-size:clamp(13px, 2.8vw, 15px);
+margin: 2px;
+min-height:36px;
+}
+
+.btn-vermelho{
+background:#e53935;
+color:white;
+}
+
+.btn-vermelho:hover{
+background:#ff6659;
+}
+
+.btn-azul{
+background:#2196F3;
+color:white;
+}
+
+.btn-azul:hover{
+background:#64B5F6;
+}
+
+.input-editar{
+background:#444;
+border:1px solid #ff9800;
+color:white;
+padding:8px 10px;
+border-radius:5px;
+font-size:clamp(15px, 3vw, 17px);
+width:100%;
+min-height:40px;
+}
+
+.acoes{
+white-space:nowrap;
+display:flex;
+gap:5px;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+.filtros{
+display:flex;
+gap:12px;
+margin-bottom:15px;
+flex-wrap:wrap;
+align-items:center;
+}
+
+.grupo-campo{
+display:flex;
+flex-direction:column;
+gap:5px;
+flex:1;
+min-width:130px;
+}
+
+.grupo-campo label{
+font-size:clamp(13px, 2.8vw, 15px);
+color:#ccc;
+}
+
+select, input[type="date"], input[type="month"], input[type="number"]{
+background:#444;
+color:white;
+border:1px solid #ff9800;
+padding:10px;
+border-radius:6px;
+font-size:clamp(15px, 3vw, 17px);
+min-height:42px;
+}
+
+.resumo-periodo{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:12px;
+margin:15px 0;
+}
+
+.resumo-item{
+background:#383838;
+padding:12px;
+border-radius:10px;
+text-align:center;
+}
+
+.resumo-item h4{
+color:#ff9800;
+margin-bottom:8px;
+font-size:clamp(15px, 3vw, 17px);
+}
+
+.resumo-item p{
+font-size:clamp(20px, 4.5vw, 24px);
+font-weight:bold;
+color:#00ff88;
+}
+
+.observacao-area{
+width:100%;
+background:#444;
+border:1px solid #ff9800;
+color:white;
+padding:12px;
+border-radius:6px;
+font-size:clamp(15px, 3vw, 17px);
+min-height:90px;
+resize:vertical;
+}
+
+.aviso-data{
+color:#ffeb3b;
+font-size:clamp(14px, 2.8vw, 15px);
+margin-top:8px;
+}
+
+.resumo-mes{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:10px;
+margin:15px 0;
+}
+
+.resumo-mes .caixa{
+padding:12px;
+font-size:clamp(15px, 3vw, 16px);
+}
+
+.resumo-mes .receita{color:#00ff88;}
+.resumo-mes .despesa{color:#ff6659;}
+.resumo-mes .saldo{color:#81d4fa;}
+
+.lista-movimentos{
+margin-top:15px;
+}
+
+.item-movimento{
+display:flex;
+flex-direction:column;
+gap:10px;
+justify-content:space-between;
+align-items:flex-start;
+background:#383838;
+padding:12px;
+border-radius:8px;
+margin:8px 0;
+border-left:4px solid;
+}
+
+@media (min-width:480px){
+.item-movimento{
+flex-direction:row;
+align-items:center;
+}
+}
+
+.receita{border-left-color:#00ff88;}
+.despesa{border-left-color:#ff6659;}
+
+.categoria-tag{
+display:flex;
+align-items:center;
+gap:8px;
+font-weight:bold;
+font-size:clamp(15px, 3vw, 17px);
+}
+
+.icone-categoria{
+width:32px;
+height:32px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:clamp(14px, 2.8vw, 16px);
+color:white;
+flex-shrink:0;
+}
+
+.valor-movimento{
+font-size:clamp(17px, 3.8vw, 20px);
+font-weight:bold;
+align-self:flex-end;
+}
+
+@media (min-width:480px){
+.valor-movimento{
+align-self:center;
+}
+}
+
+.sem-registros{
+text-align:center;
+color:#999;
+padding:30px 15px;
+font-style:italic;
+font-size:clamp(15px, 3vw, 17px);
+}
+
+.texto-estilizado{
+font-weight: bold;
+font-size: 1.05em;
+letter-spacing: 0.5px;
+}
+
+.caixa-exportar{
+background:#222;
+padding:12px;
+border-radius:8px;
+margin-top:15px;
+border:1px dashed #ff9800;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="off-road.png" alt="Logo Off Road">
+<div>
+<h1>GESTOR DE GASTOS OFF ROAD</h1>
+<h3>Controle Diário de Peças e Despesas Mecânicas • Receitas e Saldo</h3>
+</div>
+</header>
+
+<div class="container">
+
+<!-- NOVO: ÁREA DE BACKUP E RESTAURAÇÃO -->
+<div class="card">
+<h2>💾 Backup e Transferência de Dados</h2>
+<div class="caixa-exportar">
+<p style="margin-bottom:10px; color:#ddd;">Copie seus dados para levar ao celular ou outro aparelho:</p>
+<button class="btn btn-azul" onclick="copiarDados()">📋 Copiar Todos os Dados</button>
+<p id="msg-copia" style="margin-top:8px; color:#00ff88; display:none;">✅ Dados copiados! Agora é só colar no celular.</p>
+</div>
+<div class="caixa-exportar" style="margin-top:15px;">
+<p style="margin-bottom:10px; color:#ddd;">Cole os dados aqui para restaurar no celular:</p>
+<textarea id="campo-restaurar" class="observacao-area" placeholder="Cole o texto copiado do computador aqui..."></textarea>
+<button class="btn" style="margin-top:10px;" onclick="restaurarDados()">🔄 Restaurar Dados</button>
+<p id="msg-restaura" style="margin-top:8px; color:#00ff88; display:none;">✅ Dados carregados! Atualize a página.</p>
+</div>
+</div>
+
+<!-- SELETOR DE DATA PRINCIPAL -->
+<div class="card">
+<h2>
+📅 Gestão por Data
+<div>
+<button class="btn btn-pequeno" onclick="irParaHoje()">Hoje</button>
+</div>
+</h2>
+
+<div class="grupo-campo">
+<label>Selecione a data para cadastrar ou consultar:</label>
+<input type="date" id="data-atual" onchange="carregarDadosDaData()">
+</div>
+
+<p class="aviso-data">Data atual: <span id="data-completa"></span></p>
+<p style="color:#81d4fa; font-size:clamp(13px, 2.8vw, 14px); margin-top:8px;">💡 Cada data tem seus próprios dados. Receitas e despesas ficam salvas por dia/mês.</p>
+</div>
+
+<!-- RESUMO DO MÊS -->
+<div class="card">
+<h2>
+📊 Resumo do Mês
+<div class="grupo-campo" style="display:inline-block; margin-top:8px;">
+<select id="filtro-mes" onchange="atualizarResumoMes()">
+<option value="01">Janeiro</option>
+<option value="02">Fevereiro</option>
+<option value="03">Março</option>
+<option value="04">Abril</option>
+<option value="05">Maio</option>
+<option value="06">Junho</option>
+<option value="07" selected>Julho</option>
+<option value="08">Agosto</option>
+<option value="09">Setembro</option>
+<option value="10">Outubro</option>
+<option value="11">Novembro</option>
+<option value="12">Dezembro</option>
+</select>
+<select id="filtro-ano" onchange="atualizarResumoMes()">
+<option value="2024">2024</option>
+<option value="2025">2025</option>
+<option value="2026" selected>2026</option>
+<option value="2027">2027</option>
+</select>
+</div>
+</h2>
+
+<div class="resumo-mes">
+<div class="caixa">❌ <span class="texto-estilizado">Despesas</span> (Saiu)<br><b class="despesa" id="total-despesas-mes">R$ 0,00</b></div>
+<div class="caixa">✅ <span class="texto-estilizado">Receitas</span> (Entrou)<br><b class="receita" id="total-receitas-mes">R$ 0,00</b></div>
+<div class="caixa">💹 <span class="texto-estilizado">Lucro</span> (Sobrou)<br><b class="saldo" id="saldo-mes">R$ 0,00</b></div>
+</div>
+
+<div id="lista-movimentos-mes" class="lista-movimentos">
+<p class="sem-registros">Selecione mês/ano para ver os lançamentos</p>
+</div>
+
+<button class="btn" style="margin-top:15px; width:100%;" onclick="abrirCadastroMovimento()">+ Novo Lançamento</button>
+</div>
+
+<!-- FILTRO DE PERÍODO -->
+<div class="card">
+<h2>🔍 Visualizar Gastos por Período</h2>
+<div class="filtros">
+<div class="grupo-campo">
+<label>Período:</label>
+<select id="tipo-periodo" onchange="mudarTipoPeriodo()">
+<option value="diario">Diário</option>
+<option value="semanal">Semanal</option>
+<option value="mensal">Mensal</option>
+<option value="anual">Anual</option>
+</select>
+</div>
+
+<div class="grupo-campo" id="campo-data">
+<label>Data:</label>
+<input type="date" id="data-filtro">
+</div>
+
+<div class="grupo-campo" id="campo-mes-ano" style="display:none;">
+<label>Mês/Ano:</label>
+<input type="month" id="mes-filtro">
+</div>
+
+<div class="grupo-campo" id="campo-ano" style="display:none;">
+<label>Ano:</label>
+<input type="number" id="ano-filtro" min="2020" max="2050" value="2026">
+</div>
+
+<button class="btn" style="margin-top:8px; width:100%;" onclick="calcularResumoPeriodo()">Carregar Total</button>
+</div>
+
+<div class="resumo-periodo" id="resumo-periodo">
+<div class="resumo-item">
+<h4>Total do Período</h4>
+<p id="valor-resumo">R$ 0,00</p>
+</div>
+</div>
+</div>
+
+<!-- DESPESAS -->
+<div class="card">
+<h2>
+🔧 <span class="texto-estilizado">Despesas</span> de Peças e Serviços
+<div style="margin-top:8px;">
+<button class="btn btn-pequeno" onclick="adicionarNovaLinha()">+ Adicionar</button>
+<button class="btn btn-pequeno btn-vermelho" onclick="limparTabelaAtual()">Limpar</button>
+</div>
+</h2>
+
+<div class="tabela-responsiva">
+<table id="tabela-despesas">
+<thead>
+<tr>
+<th>Descrição</th>
+<th>Valor (R$)</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
+<div class="total">
+💰 <span class="texto-estilizado">Total do Dia</span> (Apenas Gastos): <span id="valor-total">R$ 0,00</span>
+<div class="descricao-total">* Esse valor NÃO é lucro, é somente o que foi gasto com peças e serviços no dia.</div>
+</div>
+</div>
+
+<!-- CONTROLE DE PAGAMENTOS -->
+<div class="card">
+<h2>💳 Controle - Dani Auto Peças</h2>
+
+<div class="pagamentos" id="pagamentos-container">
+<div class="caixa">
+Valor Total<br>
+<b id="valor-total-compra">R$ 0,00</b>
+<button class="btn btn-pequeno" style="margin-top:8px;" onclick="editarValorCompra()">Editar</button>
+</div>
+
+<div class="caixa">
+Pagamento 1<br>
+<b id="pag1">R$ 0,00</b>
+<button class="btn btn-pequeno" style="margin-top:8px;" onclick="editarPagamento(1)">Editar</button>
+</div>
+
+<div class="caixa">
+Pagamento 2<br>
+<b id="pag2">R$ 0,00</b>
+<button class="btn btn-pequeno" style="margin-top:8px;" onclick="editarPagamento(2)">Editar</button>
+</div>
+
+<div class="caixa">
+Pagamento 3<br>
+<b id="pag3">R$ 0,00</b>
+<button class="btn btn-pequeno" style="margin-top:8px;" onclick="editarPagamento(3)">Editar</button>
+</div>
+
+<div class="caixa">
+Pagamento 4<br>
+<b id="pag4">R$ 0,00</b>
+<button class="btn btn-pequeno" style="margin-top:8px;" onclick="editarPagamento(4)">Editar</button>
+</div>
+
+<div class="caixa">
+✅ <span class="texto-estilizado">Total Pago</span><br>
+<b id="total-pago">R$ 0,00</b>
+</div>
+
+<div class="caixa">
+⏳ <span class="texto-estilizado">Saldo Restante</span><br>
+<b style="color:#ff9800;" id="saldo-restante">R$ 0,00</b>
+</div>
+</div>
+
+<button class="btn" style="margin-top:15px; width:100%;" onclick="adicionarPagamento()">+ Adicionar Pagamento</button>
+</div>
+
+<!-- OBSERVAÇÃO -->
+<div class="card">
+<h2>📝 Observação do Dia</h2>
+<textarea id="observacao" class="observacao-area" placeholder="Digite sua observação ou anotações importantes deste dia..."></textarea>
+<button class="btn" style="margin-top:10px; width:100%;" onclick="salvarObservacao()">Salvar Observação</button>
+</div>
+
+</div>
+
+<footer>
+Gestor de Gastos Off Road • Sistema Profissional • Receitas e Despesas
+</footer>
+
+<script>
+let bancoDeDados = {};
+let dataSelecionada = "";
+
+const categorias = {
+    receita: [
+        {nome: "Dinheiro", cor: "#2ecc71", icone: "$"},
+        {nome: "Dinheiro em papel", cor: "#e67e22", icone: "💵"}
+    ],
+    despesa: [
+        {nome: "Compras", cor: "#f39c12", icone: "🛒"},
+        {nome: "Comida", cor: "#1abc9c", icone: "🍴"},
+        {nome: "Pets", cor: "#e74c3c", icone: "🐶"},
+        {nome: "Peças Mecânicas", cor: "#9b59b6", icone: "🔧"},
+        {nome: "Serviços", cor: "#3498db", icone: "⚙️"}
+    ]
+};
+
+function formatarDataCompleta(dataStr) {
+    const diasSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+    const data = new Date(dataStr + "T12:00:00");
+    const dia = data.getDate().toString().padStart(2, '0');
+    const mes = (data.getMonth()+1).toString().padStart(2, '0');
+    const ano = data.getFullYear().toString().slice(-2);
+    const diaSemana = diasSemana[data.getDay()];
+    return `${dia}/${mes}/${ano} - ${diaSemana}`;
+}
+
+function inicializarDataSeNaoExistir(dataStr) {
+    if(!bancoDeDados[dataStr]) {
+        bancoDeDados[dataStr] = {
+            despesas: [],
+            pagamentos: { valorTotal: 0, parcelas: [] },
+            observacao: "",
+            movimentos: []
+        };
+    }
+}
+
+function carregarDadosDaData() {
+    dataSelecionada = document.getElementById("data-atual").value;
+    if(!dataSelecionada) return;
+
+    inicializarDataSeNaoExistir(dataSelecionada);
+    document.getElementById("data-completa").textContent = formatarDataCompleta(dataSelecionada);
+
+    renderizarTabela();
+    atualizarPagamentosTela();
+    document.getElementById("observacao").value = bancoDeDados[dataSelecionada].observacao || "";
+
+    atualizarResumoMes();
+    salvarTudoNoNavegador();
+}
+
+function irParaHoje() {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = (hoje.getMonth()+1).toString().padStart(2, '0');
+    const dia = hoje.getDate().toString().padStart(2, '0');
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+    document.getElementById("data-atual").value = dataFormatada;
+    carregarDadosDaData();
+}
+
+function renderizarTabela() {
+    const tbody = document.querySelector("#tabela-despesas tbody");
+    tbody.innerHTML = "";
+    const listaDespesas = bancoDeDados[dataSelecionada].despesas;
+
+    listaDespesas.forEach((item, indice) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><input type="text" class="input-editar" value="${item.descricao}" id="desc-${indice}"></td>
+            <td><input type="number" step="0.01" class="input-editar" value="${item.valor.toFixed(2)}" id="val-${indice}"></td>
+            <td class="acoes">
+                <button class="btn btn-pequeno" onclick="salvarEdicao(${indice})">Salvar</button>
+                <button class="btn btn-pequeno btn-vermelho" onclick="removerItem(${indice})">Excluir</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    calcularTotalDespesas();
+}
+
+function salvarEdicao(indice) {
+    const desc = document.getElementById(`desc-${indice}`).value.trim();
+    const val = parseFloat(document.getElementById(`val-${indice}`).value);
+    if(desc && !isNaN(val) && val >= 0) {
+        bancoDeDados[dataSelecionada].despesas[indice].descricao = desc;
+        bancoDeDados[dataSelecionada].despesas[indice].valor = val;
+        salvarTudoNoNavegador();
+    }
+    calcularTotalDespesas();
+}
+
+function removerItem(indice) {
+    if(confirm("Remover este item?")){
+        bancoDeDados[dataSelecionada].despesas.splice(indice, 1);
+        renderizarTabela();
+        salvarTudoNoNavegador();
+    }
+}
+
+function adicionarNovaLinha() {
+    bancoDeDados[dataSelecionada].despesas.push({descricao: "", valor: 0.00});
+    renderizarTabela();
+    salvarTudoNoNavegador();
+}
+
+function limparTabelaAtual() {
+    if(confirm("Apagar todos os itens desta data?")) {
+        bancoDeDados[dataSelecionada].despesas = [];
+        renderizarTabela();
+        salvarTudoNoNavegador();
+    }
+}
+
+function calcularTotalDespesas() {
+    const total = bancoDeDados[dataSelecionada].despesas.reduce((soma, i) => soma + i.valor, 0);
+    document.getElementById("valor-total").textContent = total.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+}
+
+function editarValorCompra() {
+    const atual = bancoDeDados[dataSelecionada].pagamentos.valorTotal;
+    const novoValor = parseFloat(prompt("Valor total da compra:", atual.toFixed(2)));
+    if(!isNaN(novoValor) && novoValor >= 0) {
+        bancoDeDados[dataSelecionada].pagamentos.valorTotal = novoValor;
+        atualizarPagamentosTela();
+        salvarTudoNoNavegador();
+    }
+}
+
+function editarPagamento(indice) {
+    const pag = bancoDeDados[dataSelecionada].pagamentos.parcelas;
+    const atual = pag[indice-1] || 0;
+    const novoValor = parseFloat(prompt(`Valor do Pagamento ${indice}:`, atual.toFixed(2)));
+    if(!isNaN(novoValor) && novoValor >= 0) {
+        pag[indice-1] = novoValor;
+        atualizarPagamentosTela();
+        salvarTudoNoNavegador();
+    }
+}
+
+function adicionarPagamento() {
+    const novoValor = parseFloat(prompt("Valor do novo pagamento:"));
+    if(!isNaN(novoValor) && novoValor >= 0) {
+        bancoDeDados[dataSelecionada].pagamentos.parcelas.push(novoValor);
+        atualizarPagamentosTela();
+        salvarTudoNoNavegador();
+    }
+}
+
+function atualizarPagamentosTela() {
+    const pag = bancoDeDados[dataSelecionada].pagamentos;
+    const totalPago = pag.parcelas.reduce((soma, v) => soma + v, 0);
+    const saldo = pag.valorTotal - totalPago;
+
+    document.getElementById("valor-total-compra").textContent = pag.valorTotal.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    for(let i=1; i<=4; i++) {
+        const el = document.getElementById(`pag${i}`);
+        if(el) el.textContent = (pag.parcelas[i-1] || 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    }
+    document.getElementById("total-pago").textContent = totalPago.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    document.getElementById("saldo-restante").textContent = saldo.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+}
+
+function mudarTipoPeriodo() {
+    const tipo = document.getElementById("tipo-periodo").value;
+    document.getElementById("campo-data").style.display = (tipo === "diario" || tipo === "semanal") ? "flex" : "none";
+    document.getElementById("campo-mes-ano").style.display = tipo === "mensal" ? "flex" : "none";
+    document.getElementById("campo-ano").style.display = tipo === "anual" ? "flex" : "none";
+}
+
+function calcularResumoPeriodo() {
+    const tipo = document.getElementById("tipo-periodo").value;
+    let totalGeral = 0;
+
+    if(tipo === "diario") {
+        const dataEscolhida = document.getElementById("data-filtro").value;
+        if(bancoDeDados[dataEscolhida]) totalGeral = bancoDeDados[dataEscolhida].despesas.reduce((soma, i) => soma + i.valor, 0);
+    }
+    if(tipo === "semanal") {
+        const dataEscolhida = new Date(document.getElementById("data-filtro").value + "T12:00:00");
+        const inicioSem = new Date(dataEscolhida);
+        inicioSem.setDate(dataEscolhida.getDate() - dataEscolhida.getDay());
+        const fimSem = new Date(inicioSem);
+        fimSem.setDate(inicioSem.getDate() + 6);
+        Object.keys(bancoDeDados).forEach(dStr => {
+            const d = new Date(dStr + "T12:00:00");
+            if(d >= inicioSem && d <= fimSem) totalGeral += bancoDeDados[dStr].despesas.reduce((s,i)=>s+i.valor,0);
+        });
+    }
+    if(tipo === "mensal") {
+        const mesValor = document.getElementById("mes-filtro").value;
+        if(!mesValor) return;
+        const [ano, mes] = mesValor.split("-");
+        Object.keys(bancoDeDados).forEach(dStr => {
+            const [dAno, dMes] = dStr.split("-");
+            if(dAno === ano && dMes === mes) totalGeral += bancoDeDados[dStr].despesas.reduce((s,i)=>s+i.valor,0);
+        });
+    }
+    if(tipo === "anual") {
+        const anoEscolhido = document.getElementById("ano-filtro").value;
+        Object.keys(bancoDeDados).forEach(dStr => {
+            const [dAno] = dStr.split("-");
+            if(dAno === anoEscolhido) totalGeral += bancoDeDados[dStr].despesas.reduce((s,i)=>s+i.valor,0);
+        });
+    }
+    document.getElementById("valor-resumo").textContent = totalGeral.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+}
+
+function salvarObservacao() {
+    bancoDeDados[dataSelecionada].observacao = document.getElementById("observacao").value.trim();
+    salvarTudoNoNavegador();
+    alert("Observação salva com sucesso!");
+}
+
+function abrirCadastroMovimento() {
+    const tipo = prompt("Tipo: 'receita' ou 'despesa'?");
+    if(!tipo) return;
+    const tipoFormatado = tipo.toLowerCase().trim();
+    if(!['receita','despesa'].includes(tipoFormatado)) {
+        alert("Digite apenas 'receita' ou 'despesa'");
+        return;
+    }
+
+    const categoriasLista = tipoFormatado === 'receita' ? categorias.receita : categorias.despesa;
+    const listaNomes = categoriasLista.map(c => `- ${c.nome}`).join("\n");
+    const nomeCat = prompt(`Escolha a categoria:\n\n${listaNomes}`);
+    if(!nomeCat) return;
+    const catEscolhida = categoriasLista.find(c => c.nome.toLowerCase() === nomeCat.toLowerCase().trim());
+    if(!catEscolhida) {
+        alert("Categoria não encontrada!");
+        return;
+    }
+
+    const valor = parseFloat(prompt("Digite o valor (R$):"));
+    if(isNaN(valor) || valor <= 0) {
+        alert("Valor inválido!");
+        return;
+    }
+
+    bancoDeDados[dataSelecionada].movimentos.push({
+        tipo: tipoFormatado,
+        categoria: catEscolhida.nome,
+        cor: catEscolhida.cor,
+        icone: catEscolhida.icone,
+        valor: valor
+    });
+
+    salvarTudoNoNavegador();
+    atualizarResumoMes();
+    alert("Lançamento salvo!");
+}
+
+function atualizarResumoMes() {
+    const mesSel = document.getElementById("filtro-mes").value;
+    const anoSel = document.getElementById("filtro-ano").value;
+
+    let totalReceitas = 0;
+    let totalDespesas = 0;
+    let movimentosFiltrados = [];
+
+    Object.keys(bancoDeDados).forEach(dataStr => {
+        const [ano, mes] = dataStr.split("-");
+        if(ano === anoSel && mes === mesSel) {
+            const movs = bancoDeDados[dataStr].movimentos || [];
+            movs.forEach(m => {
+                if(m.tipo === 'receita') totalReceitas += m.valor;
+                if(m.tipo === 'despesa') totalDespesas += m.valor;
+                movimentosFiltrados.push({...m, data: dataStr});
+            });
+        }
+    });
+
+    const saldo = totalReceitas - totalDespesas;
+
+    document.getElementById("total-receitas-mes").textContent = totalReceitas.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    document.getElementById("total-despesas-mes").textContent = totalDespesas.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    document.getElementById("saldo-mes").textContent = saldo.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+
+    const container = document.getElementById("lista-movimentos-mes");
+    if(movimentosFiltrados.length === 0) {
+        container.innerHTML = `<p class="sem-registros">Nenhum lançamento neste mês</p>`;
+        return;
+    }
+
+    container.innerHTML = "";
+    movimentosFiltrados.sort((a,b) => b.data.localeCompare(a.data)).forEach(mov => {
+        const el = document.createElement("div");
+        el.className = `item-movimento ${mov.tipo}`;
+        el.innerHTML = `
+            <div>
+                <div style="font-size:14px; color:#aaa; margin-bottom:4px;">${formatarDataCompleta(mov.data).split(" - ")[0]}</div>
+                <div class="categoria-tag">
+                    <div class="icone-categoria" style="background:${mov.cor}">${mov.icone}</div>
+                    ${mov.categoria}
+                </div>
+            </div>
+            <div class="valor-movimento ${mov.tipo === 'receita' ? 'receita' : 'despesa'}">
+                ${mov.tipo === 'receita' ? '+' : '-'} ${mov.valor.toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}
+            </div>
+        `;
+        container.appendChild(el);
+    });
+}
+
+function salvarTudoNoNavegador(){
+    try {
+        localStorage.setItem("gestorGastosOffRoad", JSON.stringify(bancoDeDados));
+    } catch (erro) {
+        console.warn("Não foi possível salvar os dados:", erro);
+    }
+}
+
+function carregarTudoDoNavegador(){
+    const dadosSalvos = localStorage.getItem("gestorGastosOffRoad");
+    if(dadosSalvos) {
+        try {
+            bancoDeDados = JSON.parse(dadosSalvos);
+        } catch (erro) {
+            console.warn("Dados corrompidos, iniciando novo banco:", erro);
+            bancoDeDados = {};
+        }
+    } else {
+        bancoDeDados["2026-06-19"] = {
+            despesas: [
+                {descricao:"Usinagem bucha bronze eixo de tração", valor:30.00},
+                {descricao:"Parafusos inox caixa de tração", valor:45.00},
+                {descricao:"Peças Samurai - 2 Rolamentos 14131 cone capa", valor:158.00},
+                {descricao:"Tubo DIN 80 mm", valor:60.00},
+                {descricao:"Junta Homocinética Lifan", valor:100.00},
+                {descricao:"Serviço de Torno", valor:250.00},
+                {descricao:"Camarão Hidráulica", valor:500.00},
+                {descricao:"Pagamento Bateria Edi", valor:600.00},
+                {descricao:"Negão", valor:500.00}
+            ],
+            pagamentos: {valorTotal:2000.00, parcelas:[400,400,370,400]},
+            observacao: "Só hoje olha o que paguei!",
+            movimentos: [
+                {tipo:"receita", categoria:"Dinheiro", cor:"#2ecc71", icone:"$", valor:800},
+                {tipo:"despesa", categoria:"Compras", cor:"#f39c12", icone:"🛒", valor:50}
+            ]
+        };
+        bancoDeDados["2026-04-06"] = {
+            despesas:[], pagamentos:{valorTotal:0, parcelas:[]}, observacao:"",
+            movimentos: [
+                {tipo:"despesa", categoria:"Comida", cor:"#1abc9c", icone:"🍴", valor:12.58},
+                {tipo:"despesa", categoria:"Pets", cor:"#e74c3c", icone:"🐶", valor:45.90}
+            ]
+        };
+        bancoDeDados["2026-04-04"] = {
+            despesas:[], pagamentos:{valorTotal:0, parcelas:[]}, observacao:"",
+            movimentos: [
+                {tipo:"receita", categoria:"Dinheiro em papel", cor:"#e67e22", icone:"💵", valor:85}
+            ]
+        };
+        bancoDeDados["2026-05-12"] = {
+            despesas:[], pagamentos:{valorTotal:0, parcelas:[]}, observacao:"",
+            movimentos: [
+                {tipo:"receita", categoria:"Dinheiro em papel", cor:"#e67e22", icone:"💵", valor:50}
+            ]
+        };
+    }
+}
+
+// NOVAS FUNÇÕES DE BACKUP
+function copiarDados() {
+    const dados = localStorage.getItem("gestorGastosOffRoad");
+    if(!dados) {
+        alert("Nenhum dado encontrado para copiar!");
+        return;
+    }
+    navigator.clipboard.writeText(dados).then(() => {
+        document.getElementById("msg-copia").style.display = "block";
+        setTimeout(() => document.getElementById("msg-copia").style.display = "none", 3000);
+    }).catch(() => {
+        prompt("Copie manualmente esse texto:", dados);
+    });
+}
+
+function restaurarDados() {
+    const texto = document.getElementById("campo-restaurar").value.trim();
+    if(!texto) {
+        alert("Cole os dados no campo primeiro!");
+        return;
+    }
+    try {
+        const dadosNovos = JSON.parse(texto);
+        bancoDeDados = dadosNovos;
+        localStorage.setItem("gestorGastosOffRoad", texto);
+        document.getElementById("msg-restaura").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("msg-restaura").style.display = "none";
+            window.location.reload();
+        }, 1500);
+    } catch (erro) {
+        alert("Texto inválido! Verifique se copiou tudo corretamente.");
+    }
+}
+
+window.onload = function() {
+    carregarTudoDoNavegador();
+    irParaHoje();
+    document.getElementById("data-filtro").value = document.getElementById("data-atual").value;
+    document.getElementById("mes-filtro").value = document.getElementById("data-atual").value.substring(0,7);
+    atualizarResumoMes();
+};
+</script>
+
+</body>
+</html>
